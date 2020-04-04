@@ -2,11 +2,18 @@ import numpy as np
 import cv2
 import pandas as pd
 
-cap = cv2.VideoCapture("cars.mp4")
+#VIDEO_URL = "http://217.21.34.252:31013/msh22-1/index.m3u8" #ЛЕНИНА
+VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #МАХНОВИЧА
+cap = cv2.VideoCapture(VIDEO_URL)
+if (cap.isOpened() == False):
+    print('!!! Unable to open URL')
+    sys.exit(-1)
+
 frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv2.CAP_PROP_FPS), cap.get(
     cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-offset = 6
+offset = 1 #погрешность
+
 detect = []
 cars = 0
 
@@ -17,26 +24,31 @@ print(frames_count, fps, width, height)
 sub = cv2.createBackgroundSubtractorMOG2()  # create background subtractor
 # information to start saving a video file
 ret, frame = cap.read()  # import image
-ratio = 1.0  # resize ratio
+ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
-# video = cv2.VideoWriter('traffic_counter.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps, (height2, width2), 1)
+
+lineypos1 = height - 725
+linexpos1_start =  width - 740
+linexpos1_end = width - 580
 
 while True:
     ret, frame = cap.read()  # import image
     if not ret:  # if vid finish repeat
-        frame = cv2.VideoCapture("cars.mp4")
         continue
     if ret:  # if there is a frame continue with code
-        cv2.line(frame, (450, 180), (700, 150), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (450, 180), (540, 290), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (540, 290), (950, 210), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (950, 210), (700, 150), (255, 127, 0), 3)  # Линия пересечения
+
+        #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
+        cv2.line(frame, (580, 725), (740, 725), (255, 127, 0), 3)  # Линия пересечения
+       #cv2.line(frame, (285, 825), (460, 825), (255, 127, 0), 3)  # Линия пересечения
+        #cv2.line(frame, (1520, 725), (1880, 725), (255, 127, 0), 3)  # Линия пересечения
+        #cv2.line(frame, (1255, 900), (1655, 900), (255, 127, 0), 3)  # Линия пересечения
+
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
         fgmask = sub.apply(gray)  # uses the background subtraction
         cv2.imshow("fgmask", fgmask)  # @
-        cv2.imshow("image", image)  # @
+        #cv2.imshow("image", image)  # @
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
         #cv2.imshow("gray", gray)  # @
 
@@ -55,7 +67,7 @@ while True:
         # cv2.imshow('bins',bins)
         contours, hierarchy = cv2.findContours(bins, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        minarea = 1200
+        minarea = 500
         # max area for contours, can be quite large for buses
         maxarea = 50000
         # vectors for the x and y locations of contour centroids in current frame
@@ -71,13 +83,6 @@ while True:
                     M = cv2.moments(cnt)
                     cx = int(M['m10'] / M['m00'])
                     cy = int(M['m01'] / M['m00'])
-                    #if cy < 150
-                    #detect.append(cv2.moments)
-                    '''for (cxx, cyy) in detect:
-                        if (150 + offset) > cyy > (150 - offset):
-                            pass'''
-                    # gets bounding points of contour to create rectangle
-                    # x,y is top left corner and w,h is width and height
                     x, y, w, h = cv2.boundingRect(cnt)
                     # creates a rectangle around contour
                     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -86,6 +91,25 @@ while True:
                                 (0, 0, 255), 1)
                     cv2.drawMarker(image, (cx, cy), (0, 255, 255), cv2.MARKER_CROSS, markerSize=8, thickness=3,
                                    line_type=cv2.LINE_8)
+
+                    if  ((lineypos1 - offset) <= cy <= (lineypos1 + offset)) and (linexpos1_start <= cx <=linexpos1_end):  # filters out contours that are above line (y starts at top)
+                    #Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                        # gets bounding points of contour to create rectangle
+                        # x,y is top left corner and w,h is width and height
+                        x, y, w, h = cv2.boundingRect(cnt)
+
+                        # creates a rectangle around contour
+                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+                        # Prints centroid text in order to double check later on
+                        cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
+                                    .3, (0, 0, 255), 1)
+
+                        cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
+                                       line_type=cv2.LINE_AA)
+                        cars+=1
+                        print(str(cars))
+
     cv2.imshow("countours", image)
     key = cv2.waitKey(20)
     if key == 27:
