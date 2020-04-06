@@ -33,9 +33,11 @@ ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
 
-lineypos1 = height - 725
-linexpos1_start =  0 #580/2
-linexpos1_end = 1000 #740/2
+lineypos1start = height - 725
+lineypos1end = height - 80 + 150 #Димас я честно хуй знает как тут эти игрики ебаные ставить, 800 по логике должно быть, но я въебал случайно 80 и вроде работает, хуй его знает блять, но 800 наверное правильнее
+#но ты вроде понял как их там пиздато ставить, так что поставь)
+linexpos1_start =  580/2
+linexpos1_end = 740/2
 
 lineypos2 = height - 825 + 150
 linexpos2_start = int(285/2)
@@ -78,9 +80,9 @@ while True:
             offset = 5  # погрешность
         else:
             night = False
-            offset = 5
+            offset = 2
         #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
-        cv2.line(frame, (580, 725), (740, 725), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (580, 725), (740, 800), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (285, 825), (460, 825), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (1520, 725), (1880, 725), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (1255, 900), (1655, 900), (255, 127, 0), 3)  # Линия пересечения
@@ -139,7 +141,7 @@ while True:
                                    line_type=cv2.LINE_8)
 
 
-                    if  ((lineypos1 - offset) <= cy <= (lineypos1 + offset)) and (linexpos1_start <= cx <=linexpos1_end):  # filters out contours that are above line (y starts at top)
+                    if  ((lineypos1start - offset) <= cy <= (lineypos1end + offset)) and (linexpos1_start <= cx <=linexpos1_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
