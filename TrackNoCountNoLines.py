@@ -1,7 +1,8 @@
 import numpy as np
 import cv2
 import pandas as pd
-from datetime import datetime, date, time
+from datetime import datetime
+import time
 
 #VIDEO_URL = "http://217.21.34.252:31013/msh22-1/index.m3u8" #ЛЕНИНА
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #МАХНОВИЧА
@@ -16,6 +17,10 @@ frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv
 cars = 0
 counter = 0
 night = True
+flag = 0
+millis = 0
+millis_next = 0
+temp = 0
 
 width = int(width)
 height = int(height)
@@ -29,8 +34,8 @@ image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
 
 lineypos1 = height - 725
-linexpos1_start = 580/2
-linexpos1_end = 740/2
+linexpos1_start =  0 #580/2
+linexpos1_end = 1000 #740/2
 
 lineypos2 = height - 825 + 150
 linexpos2_start = int(285/2)
@@ -52,6 +57,14 @@ lineypos6 = 74
 linexpos6_start =int(810/2)
 linexpos6_end =int(980/2)
 
+lineypos7 = 90
+linexpos7_start =int(1250/2)
+linexpos7_end =int(1400/2)
+
+lineypos8 = 45
+linexpos8_start =int(1480/2)
+linexpos8_end =int(1630/2)
+
 while True:
     ret, frame = cap.read()  # import image
     now = datetime.today()
@@ -62,10 +75,10 @@ while True:
     if ret:  # if there is a frame continue with code
         if(20<hour<7):
             night = True
-            offset = 2  # погрешность
+            offset = 5  # погрешность
         else:
             night = False
-            offset = 0
+            offset = 5
         #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
         cv2.line(frame, (580, 725), (740, 725), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (285, 825), (460, 825), (255, 127, 0), 3)  # Линия пересечения
@@ -73,6 +86,8 @@ while True:
         cv2.line(frame, (1255, 900), (1655, 900), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (575, 215), (820, 215), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (810, 150), (980, 150), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1250, 135), (1400, 135), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1480, 115), (1630, 115), (255, 127, 0), 3)  # Линия пересечения
 
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
@@ -99,7 +114,7 @@ while True:
 
         minarea = 500
         # max area for contours, can be quite large for buses
-        maxarea = 50000
+        maxarea = 30000
         # vectors for the x and y locations of contour centroids in current frame
         cxx = np.zeros(len(contours))
         cyy = np.zeros(len(contours))
@@ -111,6 +126,7 @@ while True:
                     # calculating centroids of contours
                     cnt = contours[i]
                     M = cv2.moments(cnt)
+
                     cx = int(M['m10'] / M['m00'])
                     cy = int(M['m01'] / M['m00'])
                     x, y, w, h = cv2.boundingRect(cnt)
@@ -122,8 +138,34 @@ while True:
                     cv2.drawMarker(image, (cx, cy), (0, 255, 255), cv2.MARKER_CROSS, markerSize=8, thickness=3,
                                    line_type=cv2.LINE_8)
 
+
                     if  ((lineypos1 - offset) <= cy <= (lineypos1 + offset)) and (linexpos1_start <= cx <=linexpos1_end):  # filters out contours that are above line (y starts at top)
-                    #Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                        x, y, w, h = cv2.boundingRect(cnt)
+                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                        cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
+                                    .3, (0, 0, 255), 1)
+                        cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
+                                       line_type=cv2.LINE_AA)
+
+                        if (flag%2==0):
+                            millis = int(round(time.time() * 1000))
+                            flag+=1
+                        if (flag % 2 == 1):
+                            millis_next = int(round(time.time() * 1000))
+                            temp = millis
+                            millis = millis_next
+                        if(millis_next - temp > 110):
+                         cars+=1
+                         print(str(cars) + " слева(правее)")
+                        #print(temp)
+                        #print(millis_next)
+                        #print(millis_next - temp)
+
+
+
+
+                    '''if  ((lineypos2 - offset) <= cy <= (lineypos2 + offset)) and (linexpos2_start <= cx <=linexpos2_end):  # filters out contours that are above line (y starts at top)
+                    
                         # gets bounding points of contour to create rectangle
                         # x,y is top left corner and w,h is width and height
                         x, y, w, h = cv2.boundingRect(cnt)
@@ -138,28 +180,11 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         cars+=1
-                        print(str(cars))
+                        print(str(cars) + " слева(левее)")
 
-                    if  ((lineypos2 - offset) <= cy <= (lineypos2 + offset)) and (linexpos2_start <= cx <=linexpos2_end):  # filters out contours that are above line (y starts at top)
-                    #Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
-                        # gets bounding points of contour to create rectangle
-                        # x,y is top left corner and w,h is width and height
-                        x, y, w, h = cv2.boundingRect(cnt)
-
-                        # creates a rectangle around contour
-                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-                        # Prints centroid text in order to double check later on
-                        cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
-                                    .3, (0, 0, 255), 1)
-
-                        cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
-                                       line_type=cv2.LINE_AA)
-                        cars+=1
-                        print(str(cars))
 
                     if  ((lineypos3 - offset) <= cy <= (lineypos3 + offset)) and (linexpos3_start <= cx <=linexpos3_end):  # filters out contours that are above line (y starts at top)
-                    #Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                    
                         # gets bounding points of contour to create rectangle
                         # x,y is top left corner and w,h is width and height
                         x, y, w, h = cv2.boundingRect(cnt)
@@ -176,16 +201,17 @@ while True:
                         counter+=1#перед закатом увеличивать погрешность, эту хуйню оставить(наверное)
                         if(night):
                             cars+=1
-                            print(str(cars))
+                            print(str(cars) + " снизу(правее)")
+
                         else:
                             if counter == 3:
                                 cars += 1
-                                print(str(cars))
+                                print(str(cars) + " снизу(правее)")
                                 counter = 0
 
 
                     if ((lineypos4 - offset) <= cy <= (lineypos4 + offset)) and (linexpos4_start <= cx <= linexpos4_end):  # filters out contours that are above line (y starts at top)
-                        # Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                       
                         # gets bounding points of contour to create rectangle
                         # x,y is top left corner and w,h is width and height
                         x, y, w, h = cv2.boundingRect(cnt)
@@ -200,10 +226,10 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         cars += 1
-                        print(str(cars))
+                        print(str(cars) + " снизу(левее)")
 
                     if ((lineypos5 - offset) <= cy <= (lineypos5 + offset)) and (linexpos5_start <= cx <= linexpos5_end):  # filters out contours that are above line (y starts at top)
-                        # Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                        
                         # gets bounding points of contour to create rectangle
                         # x,y is top left corner and w,h is width and height
                         x, y, w, h = cv2.boundingRect(cnt)
@@ -218,10 +244,12 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         cars += 1
-                        print(str(cars))
+                        print(str(cars) + " сверху(левее)")
+
+
 
                     if ((lineypos6 - offset) <= cy <= (lineypos6 + offset)) and (linexpos6_start <= cx <= linexpos6_end):  # filters out contours that are above line (y starts at top)
-                        # Сделать проверку на соседние пиксели, всё будет заебок если поставить правильные условия
+                        
                         # gets bounding points of contour to create rectangle
                         # x,y is top left corner and w,h is width and height
                         x, y, w, h = cv2.boundingRect(cnt)
@@ -236,7 +264,46 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         cars += 1
-                        print(str(cars))
+                        print(str(cars) + " сверху(правее)")
+
+
+                        if ((lineypos7 - offset) <= cy <= (lineypos7 + offset)) and (linexpos7_start <= cx <= linexpos7_end):  # filters out contours that are above line (y starts at top)
+                            
+                            # gets bounding points of contour to create rectangle
+                            # x,y is top left corner and w,h is width and height
+                            x, y, w, h = cv2.boundingRect(cnt)
+
+                            # creates a rectangle around contour
+                            cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+                            # Prints centroid text in order to double check later on
+                            cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
+                                        .3, (0, 0, 255), 1)
+
+                            cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
+                                           line_type=cv2.LINE_AA)
+                            cars += 1
+                            print(str(cars) + "справа(левее)")
+
+                            if ((lineypos8 - offset) <= cy <= (lineypos8 + offset)) and (linexpos8_start <= cx <= linexpos8_end):  # filters out contours that are above line (y starts at top)
+                                
+                                # gets bounding points of contour to create rectangle
+                                # x,y is top left corner and w,h is width and height
+                                x, y, w, h = cv2.boundingRect(cnt)
+
+                                # creates a rectangle around contour
+                                cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+                                # Prints centroid text in order to double check later on
+                                cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
+                                            cv2.FONT_HERSHEY_SIMPLEX,
+                                            .3, (0, 0, 255), 1)
+
+                                cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
+                                               line_type=cv2.LINE_AA)
+                                cars += 1
+                                print(str(cars) + "справа(правее)")'''
+
 
     cv2.imshow("countours", image)
     key = cv2.waitKey(20)
