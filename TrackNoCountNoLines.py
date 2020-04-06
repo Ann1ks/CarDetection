@@ -17,10 +17,12 @@ frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv
 cars = 0
 counter = 0
 night = True
+
 flag = 0
 millis = 0
 millis_next = 0
 temp = 0
+delay = 0
 
 width = int(width)
 height = int(height)
@@ -34,8 +36,7 @@ image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
 
 lineypos1start = height - 725
-lineypos1end = height - 80 + 150 #Димас я честно хуй знает как тут эти игрики ебаные ставить, 800 по логике должно быть, но я въебал случайно 80 и вроде работает, хуй его знает блять, но 800 наверное правильнее
-#но ты вроде понял как их там пиздато ставить, так что поставь)
+lineypos1end = height - 80 + 150
 linexpos1_start =  580/2
 linexpos1_end = 740/2
 
@@ -78,11 +79,13 @@ while True:
         if(20<hour<7):
             night = True
             offset = 5  # погрешность
+            delay = 228
         else:
             night = False
             offset = 2
+            delay = 110
         #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
-        cv2.line(frame, (580, 725), (740, 800), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (580, 725), (700, 780), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (285, 825), (460, 825), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (1520, 725), (1880, 725), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (1255, 900), (1655, 900), (255, 127, 0), 3)  # Линия пересечения
@@ -149,22 +152,16 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
 
-                        if (flag%2==0):
+                        if (flag==0):
                             millis = int(round(time.time() * 1000))
-                            flag+=1
-                        if (flag % 2 == 1):
+                            flag=1
+                        if (flag == 1):
                             millis_next = int(round(time.time() * 1000))
-                            temp = millis
-                            millis = millis_next
-                        if(millis_next - temp > 110):
+                            temp = millis#1 пересечение
+                            millis = millis_next # 2 пересечение
+                        if(millis_next - temp > delay):
                          cars+=1
                          print(str(cars) + " слева(правее)")
-                        #print(temp)
-                        #print(millis_next)
-                        #print(millis_next - temp)
-
-
-
 
                     '''if  ((lineypos2 - offset) <= cy <= (lineypos2 + offset)) and (linexpos2_start <= cx <=linexpos2_end):  # filters out contours that are above line (y starts at top)
                     
