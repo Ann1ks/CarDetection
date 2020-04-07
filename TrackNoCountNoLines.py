@@ -36,7 +36,7 @@ image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
 
 lineypos1start = height - 725
-lineypos1end = height - 80 + 150
+lineypos1end = height - 670
 linexpos1_start =  580/2
 linexpos1_end = 740/2
 
@@ -85,14 +85,14 @@ while True:
             offset = 2
             delay = 110
         #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
-        cv2.line(frame, (580, 725), (700, 780), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (285, 825), (460, 825), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1520, 725), (1880, 725), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1255, 900), (1655, 900), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (575, 215), (820, 215), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (810, 150), (980, 150), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1250, 135), (1400, 135), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1480, 115), (1630, 115), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (730, 580), (910, 675), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (325, 760), (460, 825), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1200, 490), (1350, 370), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1255, 900), (1480, 760), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (654, 330), (870, 230), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (875, 225), (1050, 160), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1110, 170), (1190, 220), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1300, 190), (1370, 228), (255, 127, 0), 3)  # Линия пересечения
 
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
@@ -162,6 +162,7 @@ while True:
                         if(millis_next - temp > delay):
                          cars+=1
                          print(str(cars) + " слева(правее)")
+                        #print(millis_next-temp)
 
                     '''if  ((lineypos2 - offset) <= cy <= (lineypos2 + offset)) and (linexpos2_start <= cx <=linexpos2_end):  # filters out contours that are above line (y starts at top)
                     
