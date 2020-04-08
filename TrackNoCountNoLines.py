@@ -15,10 +15,9 @@ frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv
     cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
 cars = 0
-counter = 0
 night = True
-
 flag = 0
+
 millis = 0
 millis_next = 0
 temp = 0
@@ -35,38 +34,115 @@ ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
 
-lineypos1start = height - 725
-lineypos1end = height - 670
-linexpos1_start =  580/2
-linexpos1_end = 740/2
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos2 = height - 825 + 150
-linexpos2_start = int(285/2)
-linexpos2_end =int(460/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos3 = height - 725
-linexpos3_start = 750
-linexpos3_end =1000
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos4 = 450
-linexpos4_start =int(1255/2)
-linexpos4_end =int(1655/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos5 = 105
-linexpos5_start =int(575/2)
-linexpos5_end =int(820/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos6 = 74
-linexpos6_start =int(810/2)
-linexpos6_end =int(980/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos7 = 90
-linexpos7_start =int(1250/2)
-linexpos7_end =int(1400/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
-lineypos8 = 45
-linexpos8_start =int(1480/2)
-linexpos8_end =int(1630/2)
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
+
+lineypos1start = 580/2
+lineypos1end = 610/2
+linexpos1_start =  730/2
+linexpos1_end = 780/2
 
 while True:
     ret, frame = cap.read()  # import image
@@ -78,21 +154,43 @@ while True:
     if ret:  # if there is a frame continue with code
         if(20<hour<7):
             night = True
-            offset = 5  # погрешность
+            #offset = 5  # погрешность
             delay = 228
         else:
             night = False
-            offset = 2
+            #offset = 2
             delay = 110
-        #cv2.line(frame, (0, height - 425), (width,height - 425), (255, 0, 0), 5)#линия рисуется немного не в том месте(поправлено, уже в том), причина хуй знает
-        cv2.line(frame, (730, 580), (910, 675), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (325, 760), (460, 825), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1200, 490), (1350, 370), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1255, 900), (1480, 760), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (654, 330), (870, 230), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (875, 225), (1050, 160), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1110, 170), (1190, 220), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1300, 190), (1370, 228), (255, 127, 0), 3)  # Линия пересечения
+
+        #1 линия низ право
+        cv2.line(frame, (730, 580), (780, 610), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (782, 612), (910, 675), (255, 127, 0), 3)  # Линия пересечения
+        # 2 линия низ лево
+        cv2.line(frame, (325, 760), (380, 800), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (382, 802), (438, 836), (255, 127, 0), 3)  # Линия пересечения
+        # 3 линия право верх
+        cv2.line(frame, (1200, 490), (1254, 444), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1256, 446), (1284, 422), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1286, 424), (1320, 390), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1322, 392), (1356, 366), (255, 127, 0), 3)  # Линия пересечения
+        # 4 линия право низ
+        cv2.line(frame, (1255, 900), (1360, 846), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1362, 848), (1430, 800), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1432, 802), (1500, 756), (255, 127, 0), 3)  # Линия пересечения
+        # 5 линия верх лево
+        cv2.line(frame, (650, 325), (685, 308), (255, 127, 0), 3)
+        cv2.line(frame, (690, 306), (734, 284), (255, 127, 0), 3)
+        cv2.line(frame, (738, 280), (788, 256), (255, 127, 0), 3)
+        cv2.line(frame, (790, 250), (834, 234), (255, 127, 0), 3)
+        # линия верх право
+        cv2.line(frame, (874, 224), (914, 208), (255, 127, 0), 3)
+        cv2.line(frame, (920, 202), (960, 184), (255, 127, 0), 3)
+        cv2.line(frame, (964, 180), (1004, 166), (255, 127, 0), 3)
+        # линия право левее
+        cv2.line(frame, (1120, 168), (1150, 188), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1166, 196), (1196, 216), (255, 127, 0), 3)  # Линия пересечения
+        # линия право правее
+        cv2.line(frame, (1300, 190), (1330, 210), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1390, 190), (1420, 210), (255, 127, 0), 3)  # (190,210)
 
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
@@ -151,7 +249,6 @@ while True:
                                     .3, (0, 0, 255), 1)
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
-
                         if (flag==0):
                             millis = int(round(time.time() * 1000))
                             flag=1
@@ -162,7 +259,7 @@ while True:
                         if(millis_next - temp > delay):
                          cars+=1
                          print(str(cars) + " слева(правее)")
-                        #print(millis_next-temp)
+                        print(millis_next-temp)
 
                     '''if  ((lineypos2 - offset) <= cy <= (lineypos2 + offset)) and (linexpos2_start <= cx <=linexpos2_end):  # filters out contours that are above line (y starts at top)
                     
