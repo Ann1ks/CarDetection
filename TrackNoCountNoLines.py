@@ -3,6 +3,7 @@ import cv2
 import pandas as pd
 from datetime import datetime
 import time
+from termcolor import colored
 
 #VIDEO_URL = "http://217.21.34.252:31013/msh22-1/index.m3u8" #ЛЕНИНА
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #МАХНОВИЧА
@@ -14,6 +15,8 @@ if (cap.isOpened() == False):
 frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv2.CAP_PROP_FPS), cap.get(
     cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
+carsFlag = 0
+carsTemp = 0
 cars = 0
 totalcars = 0
 
@@ -134,14 +137,14 @@ delay = 0
 
 width = int(width)
 height = int(height)
-print(frames_count, fps, width, height)
+#print(frames_count, fps, width, height)
 
 sub = cv2.createBackgroundSubtractorMOG2()  # create background subtractor
 # information to start saving a video file
 ret, frame = cap.read()  # import image
 ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
-width2, height2, channels = image.shape
+#width2, height2, channels = image.shape
 
 lineypos0start = 580/2
 lineypos0end = 610/2
@@ -233,14 +236,14 @@ lineypos17end = 180/2
 linexpos17_start =  964/2
 linexpos17_end = 1004/2
 
-lineypos18start = 168/2
-lineypos18end = 188/2
-linexpos18_start =  1120/2
-linexpos18_end = 1150/2
+lineypos18start = 160/2
+lineypos18end = 190/2
+linexpos18_start =  1100/2
+linexpos18_end = 115/2
 
-lineypos19start = 196/2
+lineypos19start = 192/2
 lineypos19end = 216/2
-linexpos19_start =  1166/2
+linexpos19_start =  1162/2
 linexpos19_end = 1196/2
 
 lineypos20start = 190/2
@@ -253,25 +256,28 @@ lineypos21end = 210/2
 linexpos21_start =  1390/2
 linexpos21_end = 1420/2
 
+offset = 0
 while True:
     ret, frame = cap.read()  # import image
     now = datetime.today()
     hour = int(now.strftime("%H"))
-
+    minutes = int(now.strftime("%M"))
+    seconds = int(now.strftime("%S"))
     if not ret:  # if vid finish repeat
         continue
     if ret:  # if there is a frame continue with code
         if(20<hour<7):
             night = True
-            delay = 228
+            delay = 90
+            offset = 6
         else:
             night = False
             delay = 110
 
-        #1 линия низ право
+        #1 линия левее право
         cv2.line(frame, (730, 580), (780, 610), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (782, 612), (910, 675), (255, 127, 0), 3)  # Линия пересечения
-        # 2 линия низ лево
+        # 2 линия левее лево
         cv2.line(frame, (325, 760), (380, 800), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (382, 802), (438, 836), (255, 127, 0), 3)  # Линия пересечения
         # 3 линия право верх
@@ -284,20 +290,20 @@ while True:
         cv2.line(frame, (1362, 848), (1430, 800), (255, 127, 0), 3)  # Линия пересечения
         cv2.line(frame, (1432, 802), (1500, 756), (255, 127, 0), 3)  # Линия пересечения
         # 5 линия верх лево
-        cv2.line(frame, (650, 325), (685, 308), (255, 127, 0), 3)
-        cv2.line(frame, (690, 306), (734, 284), (255, 127, 0), 3)
-        cv2.line(frame, (738, 280), (788, 256), (255, 127, 0), 3)
-        cv2.line(frame, (790, 250), (834, 234), (255, 127, 0), 3)
-        # линия верх право
-        cv2.line(frame, (874, 224), (914, 208), (255, 127, 0), 3)
-        cv2.line(frame, (920, 202), (960, 184), (255, 127, 0), 3)
-        cv2.line(frame, (964, 180), (1004, 166), (255, 127, 0), 3)
-        # линия право левее
-        cv2.line(frame, (1120, 168), (1150, 188), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1166, 196), (1196, 216), (255, 127, 0), 3)  # Линия пересечения
-        # линия право правее
+        cv2.line(frame, (650, 325), (685, 308), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (690, 306), (734, 284), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (738, 280), (788, 256), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (790, 250), (834, 234), (255, 127, 0), 3)  # Линия пересечения
+        #6 линия верх право
+        cv2.line(frame, (874, 224), (914, 208), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (920, 202), (960, 184), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (964, 180), (1030, 164), (255, 127, 0), 3) # Линия пересечения
+        #7 линия право левее
+        cv2.line(frame, (1100, 160), (1150, 190), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1162, 192), (1196, 216), (255, 127, 0), 3)  # Линия пересечения
+        #8 линия право правее
         cv2.line(frame, (1300, 190), (1330, 210), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1390, 190), (1420, 210), (255, 127, 0), 3)  # (190,210)
+        cv2.line(frame, (1390, 190), (1420, 210), (255, 127, 0), 3)  # Линия пересечения
 
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
@@ -357,6 +363,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag==0):
+                            cars += 1
+                            print(colored(str(cars) + " слева(правее[1])", 'green'))
                             millis = int(round(time.time() * 1000))
                             flag=1
                         if (flag == 1):
@@ -365,7 +373,7 @@ while True:
                             millis = millis_next # 2 пересечение
                         if(millis_next - temp > delay):
                          cars+=1
-                         print(str(cars) + " слева(правее[1])")
+                         print(colored(str(cars) + " слева(правее[1])", 'green'))
                         #print(millis_next-temp)
 
                     if (lineypos1start <= cy <= lineypos1end) and (linexpos1_start <= cx <= linexpos1_end):  # filters out contours that are above line (y starts at top)
@@ -376,6 +384,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag1 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " слева(правее[2])", 'green'))
                             millis1 = int(round(time.time() * 1000))
                             flag1 = 1
                         if (flag1 == 1):
@@ -384,7 +394,7 @@ while True:
                             millis1 = millis_next1  # 2 пересечение
                         if (millis_next1 - temp1 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " слева(правее[2])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos2start <= cy <= lineypos2end) and (linexpos2_start <= cx <= linexpos2_end):  # filters out contours that are above line (y starts at top)
@@ -395,6 +405,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag2 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " слева(левее[2])", 'green'))
                             millis2 = int(round(time.time() * 1000))
                             flag2 = 1
                         if (flag2 == 1):
@@ -403,7 +415,7 @@ while True:
                             millis2 = millis_next2  # 2 пересечение
                         if (millis_next2 - temp2 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " слева(левее[2])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos3start <= cy <= lineypos3end) and (linexpos1_start <= cx <= linexpos3_end):  # filters out contours that are above line (y starts at top)
@@ -414,6 +426,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag3 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " слева(левее[1])", 'green'))
                             millis3 = int(round(time.time() * 1000))
                             flag3 = 1
                         if (flag3 == 1):
@@ -422,7 +436,7 @@ while True:
                             millis3 = millis_next3  # 2 пересечение
                         if (millis_next3 - temp3 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " слева(левее[1])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos4start <= cy <= lineypos4end) and (linexpos4_start <= cx <= linexpos4_end):  # filters out contours that are above line (y starts at top)
@@ -433,6 +447,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag4 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[1])", 'green'))
                             millis4 = int(round(time.time() * 1000))
                             flag4 = 1
                         if (flag4 == 1):
@@ -441,7 +457,7 @@ while True:
                             millis4 = millis_next4  # 2 пересечение
                         if (millis_next4 - temp4 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(правее[1])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos5start <= cy <= lineypos5end) and (linexpos5_start <= cx <= linexpos5_end):  # filters out contours that are above line (y starts at top)
@@ -452,6 +468,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag5 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[2])", 'green'))
                             millis5 = int(round(time.time() * 1000))
                             flag5 = 1
                         if (flag5 == 1):
@@ -460,7 +478,7 @@ while True:
                             millis5 = millis_next5  # 2 пересечение
                         if (millis_next5 - temp5 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(правее[2])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos6start <= cy <= lineypos6end) and (linexpos6_start <= cx <= linexpos6_end):  # filters out contours that are above line (y starts at top)
@@ -471,6 +489,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag6 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[3])", 'green'))
                             millis6 = int(round(time.time() * 1000))
                             flag6 = 1
                         if (flag6 == 1):
@@ -479,7 +499,7 @@ while True:
                             millis6 = millis_next6  # 2 пересечение
                         if (millis_next6 - temp6 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(правее[3])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos7start <= cy <= lineypos7end) and (linexpos7_start <= cx <= linexpos7_end):  # filters out contours that are above line (y starts at top)
@@ -490,6 +510,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag7 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[4])", 'green'))
                             millis7 = int(round(time.time() * 1000))
                             flag7 = 1
                         if (flag7 == 1):
@@ -498,7 +520,7 @@ while True:
                             millis7 = millis_next7  # 2 пересечение
                         if (millis_next7 - temp7 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(правее[4])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos8start <= cy <= lineypos8end) and (linexpos8_start <= cx <= linexpos8_end):  # filters out contours that are above line (y starts at top)
@@ -509,6 +531,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag8 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(левее[3])", 'green'))
                             millis8 = int(round(time.time() * 1000))
                             flag8 = 1
                         if (flag8 == 1):
@@ -517,7 +541,7 @@ while True:
                             millis8 = millis_next8  # 2 пересечение
                         if (millis_next8 - temp8 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(левее[3])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos9start <= cy <= lineypos9end) and (linexpos9_start <= cx <= linexpos9_end):  # filters out contours that are above line (y starts at top)
@@ -528,6 +552,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag9 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(левее[2])", 'green'))
                             millis9 = int(round(time.time() * 1000))
                             flag9 = 1
                         if (flag9 == 1):
@@ -536,7 +562,7 @@ while True:
                             millis9 = millis_next9  # 2 пересечение
                         if (millis_next9 - temp9 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(левее[2])", 'green'))
                         #print(millis_next - temp)
 
                     if (lineypos10start <= cy <= lineypos10end) and (linexpos10_start <= cx <= linexpos10_end):  # filters out contours that are above line (y starts at top)
@@ -547,6 +573,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag10 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(левее[1])", 'green'))
                             millis10 = int(round(time.time() * 1000))
                             flag10 = 1
                         if (flag10 == 1):
@@ -555,11 +583,10 @@ while True:
                             millis10 = millis_next10  # 2 пересечение
                         if (millis_next10 - temp10 > delay):
                             cars += 1
-                            print(str(cars) + " слева(правее[2])")
+                            print(colored(str(cars) + " справа(левее[1])", 'green'))
                         #print(millis_next - temp)
 
-                    if (lineypos11start <= cy <= lineypos11end) and (
-                            linexpos11_start <= cx <= linexpos11_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos11start - offset) <= cy <= (lineypos11end+ offset)) and (linexpos11_start <= cx <= linexpos11_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -568,6 +595,8 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag11 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(левее[4])", 'green'))
                             millis11 = int(round(time.time() * 1000))
                             flag11 = 1
                         if (flag11 == 1):
@@ -576,11 +605,10 @@ while True:
                             millis11 = millis_next11  # 2 пересечение
                         if (millis_next11 - temp11 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(левее[4])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos12start <= cy <= lineypos12end) and (
-                            linexpos12_start <= cx <= linexpos12_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos12start - offset) <= cy <= (lineypos12end+ offset)) and (linexpos12_start <= cx <= linexpos12_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -589,7 +617,9 @@ while True:
                         cv2.drawMarker(image, (cx, cy), (0, 0, 255), cv2.MARKER_STAR, markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag12 == 0):
-                            millis11 = int(round(time.time() * 1000))
+                            cars += 1
+                            print(colored(str(cars) + " сверху(левее[3])", 'green'))
+                            millis12 = int(round(time.time() * 1000))
                             flag12 = 1
                         if (flag12 == 1):
                             millis_next12 = int(round(time.time() * 1000))
@@ -597,11 +627,10 @@ while True:
                             millis12 = millis_next12  # 2 пересечение
                         if (millis_next12 - temp12 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(левее[3])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos13start <= cy <= lineypos13end) and (
-                            linexpos13_start <= cx <= linexpos13_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos13start - offset) <= cy <= (lineypos13end+ offset)) and (linexpos13_start <= cx <= linexpos13_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -611,6 +640,8 @@ while True:
                                        thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag13 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(левее[2])", 'green'))
                             millis13 = int(round(time.time() * 1000))
                             flag13 = 1
                         if (flag13 == 1):
@@ -619,11 +650,10 @@ while True:
                             millis13 = millis_next13  # 2 пересечение
                         if (millis_next13 - temp13 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(левее[2])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos14start <= cy <= lineypos14end) and (
-                            linexpos14_start <= cx <= linexpos14_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos14start - offset) <= cy <= (lineypos14end+ offset)) and (linexpos14_start <= cx <= linexpos14_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -633,6 +663,8 @@ while True:
                                        thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag14 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(левее[1])", 'green'))
                             millis14 = int(round(time.time() * 1000))
                             flag14 = 1
                         if (flag14 == 1):
@@ -641,11 +673,10 @@ while True:
                             millis14 = millis_next14  # 2 пересечение
                         if (millis_next14 - temp14 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(левее[1])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos15start <= cy <= lineypos15end) and (
-                            linexpos15_start <= cx <= linexpos15_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos15start - offset) <= cy <= (lineypos15end+ offset)) and (linexpos15_start <= cx <= linexpos15_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -655,6 +686,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag15 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(правее[1])", 'green'))
                             millis15 = int(round(time.time() * 1000))
                             flag15 = 1
                         if (flag15 == 1):
@@ -663,11 +696,10 @@ while True:
                             millis15 = millis_next15  # 2 пересечение
                         if (millis_next15 - temp15 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(правее[1])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos16start <= cy <= lineypos16end) and (
-                            linexpos2_start <= cx <= linexpos2_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos16start - offset) <= cy <= (lineypos16end+ offset)) and (linexpos16_start <= cx <= linexpos16_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -677,6 +709,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag16 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(правее[2])", 'green'))
                             millis16 = int(round(time.time() * 1000))
                             flag16 = 1
                         if (flag16 == 1):
@@ -685,11 +719,10 @@ while True:
                             millis16 = millis_next16  # 2 пересечение
                         if (millis_next16 - temp16 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(правее[2])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos17start <= cy <= lineypos17end) and (
-                            linexpos17_start <= cx <= linexpos17_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos17start - offset) <= cy <= (lineypos17end+ offset)) and (linexpos17_start <= cx <= linexpos17_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -699,6 +732,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag17 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " сверху(правее[3])", 'green'))
                             millis17 = int(round(time.time() * 1000))
                             flag17 = 1
                         if (flag17 == 1):
@@ -707,11 +742,10 @@ while True:
                             millis17 = millis_next17  # 2 пересечение
                         if (millis_next17 - temp17 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " сверху(правее[3])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos18start <= cy <= lineypos18end) and (
-                            linexpos18_start <= cx <= linexpos18_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos18start - offset) <= cy <= (lineypos18end+ offset)) and (linexpos18_start <= cx <= linexpos18_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -721,7 +755,9 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag18 == 0):
-                            millis17 = int(round(time.time() * 1000))
+                            cars += 1
+                            print(colored(str(cars) + " справа(левее[2])", 'green'))
+                            millis18 = int(round(time.time() * 1000))
                             flag18 = 1
                         if (flag18 == 1):
                             millis_next18 = int(round(time.time() * 1000))
@@ -729,11 +765,10 @@ while True:
                             millis18 = millis_next18  # 2 пересечение
                         if (millis_next18 - temp18 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " справа(левее[2])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos19start <= cy <= lineypos19end) and (
-                            linexpos19_start <= cx <= linexpos19_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos19start - offset) <= cy <= (lineypos19end+ offset)) and (linexpos19_start <= cx <= linexpos19_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -743,6 +778,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag19 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(левее[1])", 'green'))
                             millis19 = int(round(time.time() * 1000))
                             flag19 = 1
                         if (flag19 == 1):
@@ -751,11 +788,10 @@ while True:
                             millis19 = millis_next19  # 2 пересечение
                         if (millis_next19 - temp19 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " справа(левее[1])", 'green'))
                         # print(millis_next - temp)
 
-                    if (lineypos20start <= cy <= lineypos20end) and (
-                            linexpos20_start <= cx <= linexpos20_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos20start - offset) <= cy <= (lineypos20end+ offset)) and (linexpos20_start <= cx <= linexpos20_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -765,6 +801,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag20 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[1])"),'green')
                             millis20 = int(round(time.time() * 1000))
                             flag20 = 1
                         if (flag20 == 1):
@@ -773,11 +811,10 @@ while True:
                             millis20 = millis_next20  # 2 пересечение
                         if (millis_next20 - temp20 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " справа(правее[1])"),'green')
                         # print(millis_next - temp)
 
-                    if (lineypos21start <= cy <= lineypos21end) and (
-                            linexpos21_start <= cx <= linexpos21_end):  # filters out contours that are above line (y starts at top)
+                    if ((lineypos21start - offset) <= cy <= (lineypos21end+ offset)) and (linexpos21_start <= cx <= linexpos21_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10),
@@ -787,6 +824,8 @@ while True:
                                        markerSize=5, thickness=1,
                                        line_type=cv2.LINE_AA)
                         if (flag21 == 0):
+                            cars += 1
+                            print(colored(str(cars) + " справа(правее[2])"), 'green')
                             millis21 = int(round(time.time() * 1000))
                             flag21 = 1
                         if (flag21 == 1):
@@ -795,10 +834,16 @@ while True:
                             millis21 = millis_next21  # 2 пересечение
                         if (millis_next21 - temp21 > delay):
                             cars += 1
-                            print(str(cars) + " слева(левее[2])")
+                            print(colored(str(cars) + " справа(правее[2])"), 'green')
                         # print(millis_next - temp)
-
-
+    if(not carsFlag):
+        carsTemp = cars
+        carsFlag = 1
+    if(carsFlag) and (cars!=carsTemp):
+        totalcars = int(cars/2)
+        if(totalcars):
+            print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
+        carsFlag = 0
 
     cv2.imshow("countours", image)
     key = cv2.waitKey(20)
