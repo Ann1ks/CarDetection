@@ -156,6 +156,7 @@ lineypos1end = 676/2
 linexpos1_start =  782/2
 linexpos1_end = 910/2
 
+
 lineypos2start = 760/2
 lineypos2end = 800/2
 linexpos2_start =  324/2
@@ -418,7 +419,7 @@ while True:
                             print(colored(str(cars) + " слева(левее[2])", 'green'))
                         #print(millis_next - temp)
 
-                    if (lineypos3start <= cy <= lineypos3end) and (linexpos1_start <= cx <= linexpos3_end):  # filters out contours that are above line (y starts at top)
+                    if (lineypos3start <= cy <= lineypos3end) and (linexpos3_start <= cx <= linexpos3_end):  # filters out contours that are above line (y starts at top)
                         x, y, w, h = cv2.boundingRect(cnt)
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                         cv2.putText(image, str(cx) + "," + str(cy), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX,
