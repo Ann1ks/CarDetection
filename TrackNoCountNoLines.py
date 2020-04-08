@@ -5,11 +5,10 @@ from datetime import datetime
 import time
 from termcolor import colored
 
-#VIDEO_URL = "http://217.21.34.252:31013/msh22-1/index.m3u8" #ЛЕНИНА
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #МАХНОВИЧА
 cap = cv2.VideoCapture(VIDEO_URL)
-if (cap.isOpened() == False):
-    print('!!! Unable to open URL')
+if (not cap.isOpened()):
+    print('Unable to open URL')
     sys.exit(-1)
 
 frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv2.CAP_PROP_FPS), cap.get(
@@ -19,8 +18,9 @@ carsFlag = 0
 carsTemp = 0
 cars = 0
 totalcars = 0
-
+totalcarsTemp = 0
 night = True
+
 flag = 0
 flag1 = 0
 flag2 = 0
@@ -137,14 +137,12 @@ delay = 0
 
 width = int(width)
 height = int(height)
-#print(frames_count, fps, width, height)
 
 sub = cv2.createBackgroundSubtractorMOG2()  # create background subtractor
 # information to start saving a video file
 ret, frame = cap.read()  # import image
 ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
-#width2, height2, channels = image.shape
 
 lineypos0start = 580/2
 lineypos0end = 610/2
@@ -155,7 +153,6 @@ lineypos1start = 612/2
 lineypos1end = 676/2
 linexpos1_start =  782/2
 linexpos1_end = 910/2
-
 
 lineypos2start = 760/2
 lineypos2end = 800/2
@@ -309,32 +306,18 @@ while True:
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
         fgmask = sub.apply(gray)  # uses the background subtraction
-        cv2.imshow("fgmask", fgmask)  # @
-        #cv2.imshow("image", image)  # @
+        cv2.imshow("fgmask", fgmask)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
-        #cv2.imshow("gray", gray)  # @
-
         # applies different thresholds to fgmask to try and isolate cars
         # just have to keep playing around with settings until cars are easily identifiable
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))  # kernel to apply to the morphology
         closing = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)
-        #cv2.imshow("closing", closing)  # @
         opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel)
-        #cv2.imshow("opening", opening)  # @
         dilation = cv2.dilate(opening, kernel)
-        #cv2.imshow("dilation", dilation)  # @
         retvalbin, bins = cv2.threshold(dilation, 220, 255, cv2.THRESH_BINARY)  # removes the shadows
-        #cv2.imshow("retvalbin", retvalbin)  # @
-        # creates contours
-        # cv2.imshow('bins',bins)
         contours, hierarchy = cv2.findContours(bins, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         minarea = 500
-        # max area for contours, can be quite large for buses
         maxarea = 30000
-        # vectors for the x and y locations of contour centroids in current frame
-        cxx = np.zeros(len(contours))
-        cyy = np.zeros(len(contours))
 
         for i in range(len(contours)):  # cycles through all contours in current frame
             if hierarchy[0, i, 3] == -1:  # using hierarchy to only count parent contours (contours not within others)
@@ -343,7 +326,6 @@ while True:
                     # calculating centroids of contours
                     cnt = contours[i]
                     M = cv2.moments(cnt)
-
                     cx = int(M['m10'] / M['m00'])
                     cy = int(M['m01'] / M['m00'])
                     x, y, w, h = cv2.boundingRect(cnt)
@@ -840,9 +822,10 @@ while True:
     if(not carsFlag):
         carsTemp = cars
         carsFlag = 1
+        totalcarsTemp = int(cars/2)
     if(carsFlag) and (cars!=carsTemp):
         totalcars = int(cars/2)
-        if(totalcars):
+        if(totalcars) and (totalcars!=totalcarsTemp):
             print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
         carsFlag = 0
 
