@@ -1,11 +1,10 @@
 import numpy as np
 import cv2
-import pandas as pd
 from datetime import datetime
 import time
 from termcolor import colored
 
-VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #МАХНОВИЧА
+VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
 if (not cap.isOpened()):
     print('Unable to open URL')
@@ -143,7 +142,7 @@ sub = cv2.createBackgroundSubtractorMOG2()  # create background subtractor
 ret, frame = cap.read()  # import image
 ratio = 0.5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
-
+#Coodridates to check if lines crossed
 lineypos0start = 580/2
 lineypos0end = 610/2
 linexpos0_start =  730/2
@@ -219,42 +218,42 @@ lineypos14end = 250/2
 linexpos14_start =  790/2
 linexpos14_end = 834/2
 
-lineypos15start = 208/2
+lineypos15start = 204/2
 lineypos15end = 224/2
 linexpos15_start =  874/2
-linexpos15_end = 914/2
+linexpos15_end = 918/2
 
 lineypos16start = 184/2
 lineypos16end = 202/2
 linexpos16_start =  920/2
 linexpos16_end = 960/2
 
-lineypos17start = 166/2
+lineypos17start = 154/2
 lineypos17end = 180/2
 linexpos17_start =  964/2
-linexpos17_end = 1004/2
+linexpos17_end = 1070/2
 
-lineypos18start = 160/2
+lineypos18start = 150/2
 lineypos18end = 190/2
-linexpos18_start =  1100/2
-linexpos18_end = 115/2
+linexpos18_start =  1080/2
+linexpos18_end = 1150/2
 
 lineypos19start = 192/2
 lineypos19end = 216/2
-linexpos19_start =  1162/2
+linexpos19_start =  1152/2
 linexpos19_end = 1196/2
 
-lineypos20start = 190/2
-lineypos20end = 210/2
-linexpos20_start =  1300/2
-linexpos20_end = 1330/2
+lineypos20start = 218/2
+lineypos20end = 250/2
+linexpos20_start =  1198/2
+linexpos20_end = 1250/2
 
-lineypos21start = 190/2
-lineypos21end = 210/2
-linexpos21_start =  1390/2
-linexpos21_end = 1420/2
+lineypos21start = 252/2
+lineypos21end = 280/2
+linexpos21_start =  1252/2
+linexpos21_end = 1300/2
 
-offset = 0
+offset = 0 #infelicity
 while True:
     ret, frame = cap.read()  # import image
     now = datetime.today()
@@ -273,35 +272,35 @@ while True:
             delay = 110
 
         #1 линия левее право
-        cv2.line(frame, (730, 580), (780, 610), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (782, 612), (910, 675), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (730, 580), (780, 610), (255, 127, 0), 3)
+        cv2.line(frame, (782, 612), (910, 675), (255, 127, 0), 3)
         # 2 линия левее лево
-        cv2.line(frame, (325, 760), (380, 800), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (382, 802), (438, 836), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (325, 760), (380, 800), (255, 127, 0), 3)
+        cv2.line(frame, (382, 802), (438, 836), (255, 127, 0), 3)
         # 3 линия право верх
-        cv2.line(frame, (1200, 490), (1254, 444), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1256, 446), (1284, 422), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1286, 424), (1320, 390), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1322, 392), (1356, 366), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1200, 490), (1254, 444), (255, 127, 0), 3)
+        cv2.line(frame, (1256, 446), (1284, 422), (255, 127, 0), 3)
+        cv2.line(frame, (1286, 424), (1320, 390), (255, 127, 0), 3)
+        cv2.line(frame, (1322, 392), (1356, 366), (255, 127, 0), 3)
         # 4 линия право низ
-        cv2.line(frame, (1255, 900), (1360, 846), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1362, 848), (1430, 800), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1432, 802), (1500, 756), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1255, 900), (1360, 846), (255, 127, 0), 3)
+        cv2.line(frame, (1362, 848), (1430, 800), (255, 127, 0), 3)
+        cv2.line(frame, (1432, 802), (1500, 756), (255, 127, 0), 3)
         # 5 линия верх лево
-        cv2.line(frame, (650, 325), (685, 308), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (690, 306), (734, 284), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (738, 280), (788, 256), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (790, 250), (834, 234), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (650, 325), (685, 308), (255, 127, 0), 3)
+        cv2.line(frame, (690, 306), (734, 284), (255, 127, 0), 3)
+        cv2.line(frame, (738, 280), (788, 256), (255, 127, 0), 3)
+        cv2.line(frame, (790, 250), (834, 234), (255, 127, 0), 3)
         #6 линия верх право
-        cv2.line(frame, (874, 224), (914, 208), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (920, 202), (960, 184), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (964, 180), (1030, 164), (255, 127, 0), 3) # Линия пересечения
+        cv2.line(frame, (874, 224), (918, 204), (255, 127, 0), 3)
+        cv2.line(frame, (920, 202), (960, 184), (255, 127, 0), 3)
+        cv2.line(frame, (964, 180), (1070, 154), (255, 127, 0), 3)
         #7 линия право левее
-        cv2.line(frame, (1100, 160), (1150, 190), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1162, 192), (1196, 216), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1080, 150), (1150, 190), (255, 127, 0), 3)
+        cv2.line(frame, (1152, 192), (1196, 216), (255, 127, 0), 3)
         #8 линия право правее
-        cv2.line(frame, (1300, 190), (1330, 210), (255, 127, 0), 3)  # Линия пересечения
-        cv2.line(frame, (1390, 190), (1420, 210), (255, 127, 0), 3)  # Линия пересечения
+        cv2.line(frame, (1198, 218), (1250, 250), (255, 127, 0), 3)
+        cv2.line(frame, (1252, 252), (1300, 280), (255, 127, 0), 3)
 
         image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # converts image to gray
@@ -316,7 +315,7 @@ while True:
         dilation = cv2.dilate(opening, kernel)
         retvalbin, bins = cv2.threshold(dilation, 220, 255, cv2.THRESH_BINARY)  # removes the shadows
         contours, hierarchy = cv2.findContours(bins, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        minarea = 500
+        minarea = 420
         maxarea = 30000
 
         for i in range(len(contours)):  # cycles through all contours in current frame
@@ -785,7 +784,7 @@ while True:
                                        line_type=cv2.LINE_AA)
                         if (flag20 == 0):
                             cars += 1
-                            print(colored(str(cars) + " справа(правее[1])"),'green')
+                            print(colored(str(cars) + " справа(правее[1])",'green'))
                             millis20 = int(round(time.time() * 1000))
                             flag20 = 1
                         if (flag20 == 1):
@@ -794,7 +793,7 @@ while True:
                             millis20 = millis_next20  # 2 пересечение
                         if (millis_next20 - temp20 > delay):
                             cars += 1
-                            print(colored(str(cars) + " справа(правее[1])"),'green')
+                            print(colored(str(cars) + " справа(правее[1])",'green'))
                         # print(millis_next - temp)
 
                     if ((lineypos21start - offset) <= cy <= (lineypos21end+ offset)) and (linexpos21_start <= cx <= linexpos21_end):  # filters out contours that are above line (y starts at top)
@@ -808,7 +807,7 @@ while True:
                                        line_type=cv2.LINE_AA)
                         if (flag21 == 0):
                             cars += 1
-                            print(colored(str(cars) + " справа(правее[2])"), 'green')
+                            print(colored(str(cars) + " справа(правее[2])", 'green'))
                             millis21 = int(round(time.time() * 1000))
                             flag21 = 1
                         if (flag21 == 1):
@@ -817,7 +816,7 @@ while True:
                             millis21 = millis_next21  # 2 пересечение
                         if (millis_next21 - temp21 > delay):
                             cars += 1
-                            print(colored(str(cars) + " справа(правее[2])"), 'green')
+                            print(colored(str(cars) + " справа(правее[2])", 'green'))
                         # print(millis_next - temp)
     if(not carsFlag):
         carsTemp = cars
@@ -829,6 +828,7 @@ while True:
             print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
         carsFlag = 0
 
+    cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (51, 0, 204), 2)
     cv2.imshow("countours", image)
     key = cv2.waitKey(20)
     if key == 27:
