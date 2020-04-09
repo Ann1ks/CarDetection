@@ -3,7 +3,7 @@ import cv2
 from datetime import datetime
 import time
 from termcolor import colored
-
+import sqlite3
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
 if (not cap.isOpened()):
@@ -19,6 +19,7 @@ cars = 0
 totalcars = 0
 totalcarsTemp = 0
 night = True
+
 
 flag = 0
 flag1 = 0
@@ -256,14 +257,14 @@ linexpos21_end = 1300/2
 offset = 0 #infelicity
 while True:
     ret, frame = cap.read()  # import image
-    now = datetime.today()
-    hour = int(now.strftime("%H"))
-    minutes = int(now.strftime("%M"))
-    seconds = int(now.strftime("%S"))
+    nowC= datetime.today()
+    hourC = int(nowC.strftime("%H"))
+    minuteC = int(nowC.strftime("%M"))
+    secondsC = int(nowC.strftime("%S"))
     if not ret:  # if vid finish repeat
         continue
     if ret:  # if there is a frame continue with code
-        if(20<hour<7):
+        if(20<hourC<7):
             night = True
             delay = 90
             offset = 6
@@ -827,6 +828,73 @@ while True:
         if(totalcars) and (totalcars!=totalcarsTemp):
             print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
         carsFlag = 0
+
+    if(minuteC%20==0) and (secondsC==0):
+        cars = 0
+
+    ############################
+    now = datetime.now()
+    year = int(now.strftime("%Y"))
+    month = int(now.strftime("%m"))
+    monthname = ' '
+    day = int(now.strftime("%d"))
+    hour = int(now.strftime("%H"))
+    minute = int(now.strftime("%M"))
+    seconds = int(nowC.strftime("%S"))
+    amount = totalcars
+
+    if month == 1:
+        monthname = "January"
+    if month == 2:
+        monthname = "February"
+    if month == 3:
+        monthname = "March"
+    if month == 4:
+        monthname = "April"
+    if month == 5:
+        monthname = "May"
+    if month == 6:
+        monthname = "June"
+    if month == 7:
+        monthname = "July"
+    if month == 8:
+        monthname = "August"
+    if month == 9:
+        monthname = "September"
+    if month == 10:
+        monthname = "October"
+    if month == 11:
+        monthname = "November"
+    if month == 12:
+        monthname = "December"
+
+
+    def create_data():
+        con = sqlite3.connect('MyDB.db')
+        cursor = con.cursor()
+
+        cursor.execute('CREATE TABLE IF NOT EXISTS core(Id INTEGER PRIMARY KEY,'
+                       'CarsAmount INTEGER,'
+                       'Year INTEGER, '
+                       'Month TEXT, '
+                       'Day INTEGER, '
+                       'Hour INTEGER, '
+                       'Minute INTEGER)')
+
+        data = [amount, year, monthname, day, hour, minute]
+
+        cursor.execute('INSERT INTO core(CarsAmount,Year,Month,Day,Hour,Minute) VALUES(?,?,?,?,?,?) ', data)
+        con.commit()
+        cursor.close()
+        con.close()
+
+    check = 0
+    if(minute % 20 == 0) and (seconds == 0) and (not check):
+        create_data()
+        check = 1
+    if(seconds == 1):
+        check = 0
+    #################
 
     cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (51, 0, 204), 2)
     cv2.imshow("countours", image)
