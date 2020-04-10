@@ -19,7 +19,7 @@ cars = 0
 totalcars = 0
 totalcarsTemp = 0
 night = True
-
+check = 1
 
 flag = 0
 flag1 = 0
@@ -829,7 +829,7 @@ while True:
             print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
         carsFlag = 0
 
-    if(minuteC%20==0) and (secondsC==0):
+    if(minuteC%20==0) and (secondsC ==0):
         cars = 0
 
     ############################
@@ -888,12 +888,12 @@ while True:
         cursor.close()
         con.close()
 
-    check = 0
-    if(minute % 20 == 0) and (seconds == 0) and (not check):
+
+    if(minute % 58 == 0) and (seconds == 0) and (check):
         create_data()
-        check = 1
-    if(seconds == 1):
         check = 0
+    if(seconds == 1):
+        check = 1
     #################
 
     cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (51, 0, 204), 2)
