@@ -4,6 +4,9 @@ from datetime import datetime
 import time
 from termcolor import colored
 import dbControl
+import predictor
+
+#predictor.prediction()
 
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
@@ -352,8 +355,8 @@ while True:
                             temp = millis#1 пересечение
                             millis = millis_next # 2 пересечение
                         if(millis_next - temp > delay):
-                         cars+=1
-                         print(colored(str(cars) + " слева(правее[1])", 'green'))
+                            cars+=1
+                            print(colored(str(cars) + " слева(правее[1])", 'green'))
                         #print(millis_next-temp)
 
                     if (lineypos1start <= cy <= lineypos1end) and (linexpos1_start <= cx <= linexpos1_end):  # filters out contours that are above line (y starts at top)
@@ -838,7 +841,6 @@ while True:
         check = 0
     if(secondsC == 1):
         check = 1
-    #################
 
     cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (51, 0, 204), 2)
     cv2.imshow("countours", image)
