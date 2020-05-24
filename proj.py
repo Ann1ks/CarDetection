@@ -6,7 +6,41 @@ from termcolor import colored
 import dbControl
 import predictor
 
-#predictor.prediction()
+now = datetime.today()
+yearC = int(now.strftime("%Y"))
+monthC = int(now.strftime("%m"))
+dayC = int(now.strftime("%d"))
+hourC = int(now.strftime("%H"))
+minuteC = int(now.strftime("%M"))
+secondsC = int(now.strftime("%S"))
+monthNameC = ' '
+
+if monthC == 1:
+    monthNameC = "January"
+if monthC == 2:
+    monthNameC = "February"
+if monthC == 3:
+    monthNameC = "March"
+if monthC == 4:
+    monthNameC = "April"
+if monthC == 5:
+    monthNameC = "May"
+if monthC == 6:
+    monthNameC = "June"
+if monthC == 7:
+    monthNameC = "July"
+if monthC == 8:
+    monthNameC = "August"
+if monthC == 9:
+    monthNameC = "September"
+if monthC == 10:
+    monthNameC = "October"
+if monthC == 11:
+    monthNameC = "November"
+if monthC == 12:
+    monthNameC = "December"
+    
+predictor.prediction(yearC,monthNameC,dayC,hourC,minuteC)
 
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
@@ -257,10 +291,13 @@ linexpos21_end = 1300/2
 offset = 0 #infelicity
 while True:
     ret, frame = cap.read()  # import image
-    nowC= datetime.today()
-    hourC = int(nowC.strftime("%H"))
-    minuteC = int(nowC.strftime("%M"))
-    secondsC = int(nowC.strftime("%S"))
+    now = datetime.today()
+    yearC = int(now.strftime("%Y"))
+    monthC = int(now.strftime("%m"))
+    dayC = int(now.strftime("%d"))
+    hourC = int(now.strftime("%H"))
+    minuteC = int(now.strftime("%M"))
+    secondsC = int(now.strftime("%S"))
     if not ret:  # if vid finish repeat
         continue
     if ret:  # if there is a frame continue with code
@@ -837,7 +874,7 @@ while True:
 
     #запись в БД каждые 20 минуточек
     if(minuteC % 20 == 0) and (secondsC == 0) and (check):
-        dbControl.WriteData(totalcars)
+        dbControl.WriteData(totalcars,yearC,monthNameC,dayC,hourC,minuteC)
         check = 0
     if(secondsC == 1):
         check = 1

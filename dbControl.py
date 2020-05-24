@@ -3,43 +3,28 @@ import sqlite3
 from datetime import datetime
 import time
 
-now = datetime.now()
-year = int(now.strftime("%Y"))
-month = int(now.strftime("%m"))
-monthname = ' '
-day = int(now.strftime("%d"))
-hour = int(now.strftime("%H"))
-minute = int(now.strftime("%M"))
+load = ' '
 
-if month==1:
-    monthname = "January"
-if month==2:
-    monthname = "February"
-if month==3:
-    monthname = "March"
-if month==4:
-    monthname = "April"
-if month==5:
-    monthname = "May"
-if month==6:
-    monthname = "June"
-if month==7:
-    monthname = "July"
-if month==8:
-    monthname = "August"
-if month==9:
-    monthname = "September"
-if month==10:
-    monthname = "October"
-if month==11:
-    monthname = "November"
-if month==12:
-    monthname = "December"
+def WriteData(totalcars,year,monthName,day,hour,minute):
 
-
-def WriteData(totalcars):
     con = sqlite3.connect('MyDB.db')
     cursor = con.cursor()
+    if(totalcars<50):
+        load = 'Roads are clear'
+    elif(totalcars < 150):
+        load = 'The roads are almost empty'
+    elif(totalcars < 200):
+        load = 'In places of difficulty'
+    elif(totalcars < 350):
+        load = 'Some difficulties'
+    elif (totalcars < 450):
+        load = 'Big difficulties'
+    elif (totalcars < 550):
+        load = 'Really bad situation'
+    elif (totalcars < 650):
+        load = 'You may try bysicle:)'
+    elif (totalcars < 750):
+        load = 'Press F'
 
     cursor.execute('CREATE TABLE IF NOT EXISTS core(Id INTEGER PRIMARY KEY,'
                    'Year INTEGER, '
@@ -47,11 +32,12 @@ def WriteData(totalcars):
                    'Day INTEGER, '
                    'Hour INTEGER, '
                    'Minute INTEGER, '
-                   'CarsAmount INTEGER)')
+                   'CarsAmount INTEGER, '
+                   'Load TEXT)')
 
-    data = [year, monthname, day, hour, minute, totalcars ]
+    data = [year, monthName, day, hour, minute, totalcars, load]
 
-    cursor.execute('INSERT INTO core(Year,Month,Day,Hour,Minute,CarsAmount) VALUES(?,?,?,?,?,?) ', data)
+    cursor.execute('INSERT INTO core(Year,Month,Day,Hour,Minute,CarsAmount, Load) VALUES(?,?,?,?,?,?,?) ', data)
     con.commit()
     cursor.close()
     con.close()
