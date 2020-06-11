@@ -2,13 +2,16 @@
 import sqlite3
 from datetime import datetime
 import time
+import AvgDB_workdays
+import AvgDB_weekends
+import DB_core
 
 load = ' '
 
-def WriteData(totalcars,year,monthName,day,hour,minute):
+now = datetime.now()
+dayName = (now.strftime("%A"))
 
-    con = sqlite3.connect('MyDB.db')
-    cursor = con.cursor()
+def WriteData(totalcars,year,monthName,day,hour,minute):
     if(totalcars<50):
         load = 'Roads are clear'
     elif(totalcars < 150):
@@ -26,19 +29,8 @@ def WriteData(totalcars,year,monthName,day,hour,minute):
     elif (totalcars < 750):
         load = 'Press F'
 
-    cursor.execute('CREATE TABLE IF NOT EXISTS core(Id INTEGER PRIMARY KEY,'
-                   'Year INTEGER, '
-                   'Month TEXT, '
-                   'Day INTEGER, '
-                   'Hour INTEGER, '
-                   'Minute INTEGER, '
-                   'CarsAmount INTEGER, '
-                   'Load TEXT)')
-
-    data = [year, monthName, day, hour, minute, totalcars, load]
-
-    cursor.execute('INSERT INTO core(Year,Month,Day,Hour,Minute,CarsAmount, Load) VALUES(?,?,?,?,?,?,?) ', data)
-    con.commit()
-    cursor.close()
-    con.close()
-
+    DB_core.setData(totalcars,year,monthName,day,hour,minute, load)
+    if(dayName!="Saturday" or dayName!="Sunday"):
+        AvgDB_workdays.setData(totalcars, monthName, hour, minute, load)
+    else:
+        AvgDB_weekends.setData(totalcars, monthName, hour, minute, load)

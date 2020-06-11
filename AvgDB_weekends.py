@@ -3,6 +3,8 @@ import sqlite3
 from datetime import datetime
 import time
 
+avg = 0
+temporary = 0
 def setData(totalcars,monthName,hour,minute, load):
     con = sqlite3.connect('MyDB.db')
     cursor = con.cursor()
@@ -13,9 +15,18 @@ def setData(totalcars,monthName,hour,minute, load):
                    'CarsAmount INTEGER, '
                    'Load TEXT)')
 
-    data = [monthName, hour, minute, totalcars, load]
-
-    cursor.execute('INSERT INTO DB_weekends(Month,Hour,Minute,CarsAmount,Load) VALUES(?,?,?,?,?) ', data)
+    cursor.execute("SELECT CarsAmount FROM DB_weekends WHERE Month=? AND Hour=? AND Minute=?",
+                   (monthName, hour, minute))
+    avg = cursor.fetchone()
+    temporary = avg[0]
+    #avg = load.replace('(', '').replace(')', '').replace('', '')
+    #avg = int(avg)
+    if(temporary==0):
+        temporary = totalcars
+        print(temporary)
+    else:
+        temporary = (temporary + totalcars)/2
+    cursor.execute("""UPDATE DB_weekends SET carsAmount=?, load=? WHERE Month=? AND Hour=? AND Minute=?""", (temporary, load, monthName, hour, minute))
     con.commit()
     cursor.close()
     con.close()

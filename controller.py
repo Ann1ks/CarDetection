@@ -12,10 +12,14 @@ minuteC = int(now.strftime("%M"))
 secondsC = int(now.strftime("%S"))
 monthNameC = ' '
 counter = 0
+dayName = (now.strftime("%A"))
+print(dayName)
 
+'''
 hourC = 0
 minuteC = 0
 monthC = 1
+
 def setMonthName(monthNameC):
     if monthC == 1:
         monthNameC = "January"
@@ -70,3 +74,14 @@ while counter<864:#amount of rows
         monthC+=1
         monthNameC = setMonthName(monthNameC)
     counter+=1
+'''
+
+con = sqlite3.connect('MyDB.db')
+cursor = con.cursor()
+cursor.execute('UPDATE DB_workdays WHERE id=865')
+con.commit()
+cursor.close()
+con.close()
+
+#setData(0,'June',0,40,0)
+

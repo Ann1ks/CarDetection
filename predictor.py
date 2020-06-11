@@ -4,8 +4,9 @@ import sqlite3
 
 query = ' '
 load = ' '
+condition = ' '
 
-def exec(year,monthName,day,hour,minute):
+def exec(year,monthName,day,hour,minute,condition):
     con = sqlite3.connect('MyDB.db')
     cursor = con.cursor()
     cursor.execute("SELECT Load FROM core WHERE Year=? AND Month=? AND Day=? AND Hour=? AND Minute=?", (year,monthName,day,hour,minute))
@@ -21,7 +22,9 @@ def exec(year,monthName,day,hour,minute):
 def prediction(year,monthName,day,hour,minute):
     print ('Прогнозирование на какое время вы хотите знать?')
     query = input()
-    if(query=='now'):
+    #здесь будет принт с вариантами, например 1234 и тд
+    if(query=='1'):#now
+        condition = 'now'
         if(minute<=20):
             minute=0
             exec(year,monthName,day,hour,minute)
@@ -31,7 +34,11 @@ def prediction(year,monthName,day,hour,minute):
         elif(minute<=60):
             minute = 40
             exec(year,monthName,day,hour,minute)
-    elif():
+    elif(query=='2'):#tomorrow
+        condition = 'tomorrow'
+        pass
+    elif(query=='3'):#other
+        condition = 'other'
         pass
 
 

@@ -40,7 +40,7 @@ if monthC == 11:
 if monthC == 12:
     monthNameC = "December"
     
-predictor.prediction(yearC,monthNameC,dayC,hourC,minuteC)
+#predictor.prediction(yearC,monthNameC,dayC,hourC,minuteC)
 
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
@@ -868,18 +868,15 @@ while True:
             print(colored("Всего автомобилей: " + str(totalcars), 'blue'))
         carsFlag = 0
 
-    #обнуление каждые 20 минут
-    if(minuteC%20==0) and (secondsC ==0):
-        cars = 0
-
     #запись в БД каждые 20 минуточек
     if(minuteC % 20 == 0) and (secondsC == 0) and (check):
         dbControl.WriteData(totalcars,yearC,monthNameC,dayC,hourC,minuteC)
         check = 0
+        cars = 0
     if(secondsC == 1):
         check = 1
 
-    cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (51, 0, 204), 2)
+    cv2.putText(image, "Cars: " + str(totalcars), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 204), 2)
     cv2.imshow("countours", image)
     key = cv2.waitKey(20)
     if key == 27:
