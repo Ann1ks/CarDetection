@@ -13,7 +13,7 @@ secondsC = int(now.strftime("%S"))
 monthNameC = ' '
 counter = 0
 dayName = (now.strftime("%A"))
-print(dayName)
+#print(dayName)
 
 '''
 hourC = 0
@@ -78,7 +78,13 @@ while counter<864:#amount of rows
 
 con = sqlite3.connect('MyDB.db')
 cursor = con.cursor()
-cursor.execute('UPDATE DB_workdays WHERE id=865')
+#cursor.execute("Insert Load FROM DB_weekends WHERE Month=? AND Hour=? AND Minute=?",('January', 2, 20))
+cursor.execute('UPDATE DB_weekends set Load=? WHERE Id=?',('In places of difficulty', 666))
+#load = str(cursor.fetchone())
+#load = load.replace('(', '').replace(',', '').replace(')', '').replace('', '')
+#print(load)
+
+
 con.commit()
 cursor.close()
 con.close()

@@ -5,6 +5,7 @@ import time
 from termcolor import colored
 import dbControl
 import predictor
+import sys
 
 now = datetime.today()
 yearC = int(now.strftime("%Y"))
@@ -40,7 +41,7 @@ if monthC == 11:
 if monthC == 12:
     monthNameC = "December"
     
-#predictor.prediction(yearC,monthNameC,dayC,hourC,minuteC)
+predictor.prediction(yearC,monthNameC,dayC,hourC,minuteC)
 
 VIDEO_URL = "http://217.21.34.252:31013/mah21-1/index.m3u8" #Machnovicha
 cap = cv2.VideoCapture(VIDEO_URL)
@@ -301,7 +302,7 @@ while True:
     if not ret:  # if vid finish repeat
         continue
     if ret:  # if there is a frame continue with code
-        if(20<hourC<7):
+        if(22<hourC<6):
             night = True
             delay = 90
             offset = 6
